@@ -16,15 +16,12 @@ import { UserModule } from './user/user.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      // host: process.env.DB_HOST,
-      //username: process.env.DB_USER,
-      // password: process.env.DB_PASSWORD,
-      // database: process.env.DB_DATABASE,
-      host: '52.82.88.111',
       port: 3306,
-      username: 'cbei_aws',
-      password: 'cityU2019',
-      database: 'test_ckb',
+      host: process.env.DB_HOST,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+
       entities: [
         BattleEntity,
         BattleStatus,
