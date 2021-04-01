@@ -1,10 +1,10 @@
-/**
- * @name transfer 转账交易表
- * @author Aven
- * @Date: 2021-03-31
+/*
+ * @Author: Aven
+ * @Date: 2021-03-31 10:42:57
  * @LastEditors: Aven
- * @LastEditTime: 2021-03-31
- * */
+ * @LastEditTime: 2021-04-01 22:20:38
+ * @Description: transfer 转账交易表
+ */
 
 import {
   Entity,
@@ -43,13 +43,20 @@ export class TransferEntity {
     unique: true,
     comment: 'cat名字',
   })
-  address: string;
+  name: string;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    unique: true,
+    comment: '交易记录',
+  })
+  tx_hash: string;
 
   @Column({
     type: 'enum',
     enum: Status,
     default: Status.PENDING,
-    comment: '战斗状态',
+    comment: '交易状态',
   })
   status: Status;
 

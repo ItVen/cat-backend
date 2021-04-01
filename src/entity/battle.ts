@@ -1,3 +1,10 @@
+/*
+ * @Author: Aven
+ * @Date: 2021-03-31 10:41:15
+ * @LastEditors: Aven
+ * @LastEditTime: 2021-04-01 23:13:44
+ * @Description:
+ */
 /**
  * @name battle 战斗表
  * @author Aven
@@ -32,7 +39,7 @@ export class BattleEntity {
     type: 'simple-array',
     comment: '双方战斗名字',
   })
-  address: string;
+  names: string;
 
   @Column({
     type: 'varchar',

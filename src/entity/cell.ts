@@ -1,10 +1,10 @@
-/**
- * @name cell cell表
- * @author Aven
- * @Date: 2021-03-31
+/*
+ * @Author: Aven
+ * @Date: 2021-03-31 10:40:39
  * @LastEditors: Aven
- * @LastEditTime: 2021-03-31
- * */
+ * @LastEditTime: 2021-04-01 16:46:23
+ * @Description:
+ */
 
 import {
   Entity,
@@ -26,6 +26,12 @@ export class CellEntity {
     comment: 'capacity',
   })
   capacity: string;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    comment: 'cat_name',
+  })
+  name: string;
 
   @Column({
     type: 'varchar',

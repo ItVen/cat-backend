@@ -1,10 +1,10 @@
-/**
- * @name indexer 账户信息表
- * @author Aven
- * @Date: 2021-03-31
+/*
+ * @Author: Aven
+ * @Date: 2021-03-31 10:43:34
  * @LastEditors: Aven
- * @LastEditTime: 2021-03-31
- * */
+ * @LastEditTime: 2021-04-01 17:59:10
+ * @Description:
+ */
 
 import {
   Entity,

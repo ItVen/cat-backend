@@ -1,3 +1,10 @@
+/*
+ * @Author: Aven
+ * @Date: 2021-03-30 14:46:17
+ * @LastEditors: Aven
+ * @LastEditTime: 2021-04-01 23:20:41
+ * @Description:
+ */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -8,9 +15,10 @@ import { BattleStatus } from './entity/battleStatus';
 import { CellEntity } from './entity/cell';
 import { IndexerEntity } from './entity/indexer';
 import { TransferEntity } from './entity/transfer';
-import { TxModule } from './tx/tx.module';
 import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
+import { CellModule } from './cell/cell.module';
+import { TxModule } from './tx/tx.module';
 
 @Module({
   imports: [
@@ -37,6 +45,7 @@ import { UserModule } from './user/user.module';
     }),
     TxModule,
     UserModule,
+    CellModule,
   ],
   controllers: [AppController, UserController],
   providers: [AppService],
