@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:38
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-01 22:09:24
+ * @LastEditTime: 2021-04-02 15:41:00
  * @Description:
  */
 import {
@@ -28,7 +28,10 @@ export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(AuthMiddleware)
-      .exclude({ path: 'user', method: RequestMethod.POST })
+      .exclude(
+        { path: 'user', method: RequestMethod.POST },
+        { path: 'user/cat', method: RequestMethod.GET },
+      )
       .forRoutes(UserController);
   }
 }

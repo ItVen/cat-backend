@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:50
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-01 18:39:48
+ * @LastEditTime: 2021-04-02 17:18:48
  * @Description:
  */
 import { HttpException, Injectable } from '@nestjs/common';
@@ -98,6 +98,6 @@ export class UserService {
       token: this.generateJWT(user),
     };
 
-    return { user: userRO };
+    return userRO;
   }
 }

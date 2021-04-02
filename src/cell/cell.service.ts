@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-01 18:36:37
+ * @LastEditTime: 2021-04-02 15:43:04
  * @Description:
  */
 import { Injectable } from '@nestjs/common';
@@ -54,5 +54,9 @@ export class CellService {
       sum += item.data.fishes;
     }
     return sum;
+  }
+  async findOneCat(name: string): Promise<CellEntity> {
+    const cell = await this.cellRepository.findOne({ name });
+    return cell;
   }
 }
