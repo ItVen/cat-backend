@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-30 14:46:17
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-01 23:21:16
+ * @LastEditTime: 2021-04-02 21:55:22
  * @Description:
  */
 import { Module } from '@nestjs/common';
@@ -25,14 +25,11 @@ import { TxModule } from './tx/tx.module';
     TypeOrmModule.forRoot({
       type: 'mysql',
       port: 3306,
-      // host: process.env.DB_HOST,
-      // username: process.env.DB_USER,
-      // password: process.env.DB_PASSWORD,
-      // database: process.env.DB_DATABASE,
-      host: '52.82.88.111',
-      username: 'cbei_aws',
-      password: 'cityU2019',
-      database: 'test_ckb',
+      host: process.env.DB_HOST,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+
       entities: [
         BattleEntity,
         BattleStatus,
