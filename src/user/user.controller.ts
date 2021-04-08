@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-02 17:21:57
+ * @LastEditTime: 2021-04-08 20:57:02
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
@@ -34,6 +34,7 @@ export class UserController {
   @Get('name')
   async getIsNameRepeat(@Query() queryNameDto: QueryNameDto): Promise<any> {
     const data = await this.userService.findNameUsed(queryNameDto.name);
+    console.log(data);
     return {
       success: true,
       code: 200,

@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 10:40:39
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-01 16:46:23
+ * @LastEditTime: 2021-04-08 23:40:51
  * @Description:
  */
 
@@ -23,9 +23,9 @@ export class CellEntity {
   @Column({
     type: 'varchar',
     length: 50,
-    comment: 'capacity',
+    comment: 'block_number',
   })
-  capacity: string;
+  block_number: string;
   @Column({
     type: 'varchar',
     length: 50,
@@ -33,20 +33,22 @@ export class CellEntity {
   })
   name: string;
 
+  // @Column('simple-json')
+  // out_point: Record<string, unknown>;
+
+  // @Column('simple-json')
+  // output: Record<string, unknown>;
+
   @Column({
     type: 'varchar',
-    length: 250,
-    unique: true,
-    comment: 'lock',
+    comment: 'output_data',
   })
-  lock: string;
-
-  @Column('simple-json')
-  data: {
-    name: string;
-    fishes: number;
-    hash: string;
-  };
+  output_data: string;
+  @Column({
+    type: 'varchar',
+    comment: 'tx_index',
+  })
+  tx_index: string;
 
   @ManyToOne(() => IndexerEntity, (indexer) => indexer.cell)
   indexer: IndexerEntity;
