@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:50
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-02 17:18:48
+ * @LastEditTime: 2021-04-13 00:36:36
  * @Description:
  */
 import { HttpException, Injectable } from '@nestjs/common';
@@ -12,6 +12,7 @@ import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import { CreateUserDto, PutUserCellDto } from './dto/index';
 import { CellService } from 'src/cell/cell.service';
+import { verify } from 'jsonwebtoken';
 
 const TOKEN_SECRET = process.env.TOKEN_SECRET || 'cat-test';
 @Injectable()
@@ -37,15 +38,23 @@ export class UserService {
     user = await this.indexerRepository.save(cells);
     return user;
   }
-  async createMyIndexer({ address, email }: CreateUserDto): Promise<any> {
+  async createMyIndexer({
+    address,
+    email,
+    ethAddress,
+  }: CreateUserDto): Promise<any> {
+    let where;
+    if (email) where = { email };
+    if (ethAddress) where = { ethAddress };
     const user = await this.indexerRepository.findOne({
       relations: ['cell'],
-      where: { email },
+      where,
     });
     if (user) return this.buildUserRO(user);
     const newUser = new IndexerEntity();
     newUser.address = address;
-    newUser.email = email;
+    if (email) newUser.email = email;
+    newUser.ethAddress = ethAddress;
     newUser.cell = [];
     const savedUser = await this.indexerRepository.save(newUser);
     return this.buildUserRO(savedUser);
@@ -61,11 +70,12 @@ export class UserService {
     }
     return indexer;
   }
-  public generateJWT({ id, email }: IndexerEntity): string {
+  public generateJWT({ id, email, address }: IndexerEntity): string {
     return jwt.sign(
       {
         id,
         email,
+        address,
       },
       TOKEN_SECRET,
       {
@@ -79,6 +89,7 @@ export class UserService {
       {
         id: user.id,
         email: user.email,
+        address: user.address,
       },
       TOKEN_SECRET,
       {
@@ -90,14 +101,43 @@ export class UserService {
     // todo 计算小鱼干
     const cells = this.cellService.getFisherCount(user.cell);
     const userRO = {
-      id: user.id,
-      email: user.email,
+      // id: user.id,
+      // email: user.email,
       create_cat: user.create_cat,
-      address: user.address,
+      // address: user.address,
       fishes: cells,
       token: this.generateJWT(user),
     };
 
     return userRO;
+  }
+  async findUserAllCat(
+    address: string,
+    token: string,
+  ): Promise<Record<string, unknown>> {
+    // todo
+    let mine = false;
+    let create_cat = 0;
+    if (token) {
+      try {
+        const decoded: any = verify(token.split(' ')[1], TOKEN_SECRET);
+        if (!address) address == decoded.address;
+        if (decoded.address == address) mine = true;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    const user = await this.indexerRepository.findOne({
+      relations: ['cell'],
+      where: { address: address },
+    });
+    if (mine && user) create_cat = user.create_cat;
+    const data = {
+      create_cat,
+      mine,
+      address,
+      list: user.cell,
+    };
+    return data;
   }
 }

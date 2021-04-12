@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:57:14
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-08 23:39:04
+ * @LastEditTime: 2021-04-12 23:42:23
  * @Description:
  */
 import { ApiProperty } from '@nestjs/swagger';
@@ -32,15 +32,26 @@ export class PutUserCellDto {
     type: Object,
     description: 'out_point',
   })
-  out_point: Record<string, unknown>;
+  @IsNotEmpty()
+  out_point: {
+    index: string;
+    tx_hash: string;
+  };
 
   @ApiProperty({
     type: JSON,
     description: 'output',
   })
   @IsNotEmpty()
-  output: Record<string, unknown>;
-
+  output: {
+    capacity: string;
+    lock: {
+      args: string;
+      code_hash: string;
+      hash_type: string;
+    };
+    type: string;
+  };
   @ApiProperty({
     type: String,
     description: 'output_data',

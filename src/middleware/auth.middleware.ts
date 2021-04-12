@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 17:47:55
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-08 21:25:15
+ * @LastEditTime: 2021-04-12 22:57:41
  * @Description: auth 用户验证中间件
  */
 import {
@@ -30,14 +30,12 @@ export class AuthMiddleware implements NestMiddleware {
       throw new HttpException('Not authorized.', HttpStatus.UNAUTHORIZED);
     }
     const token = authorization.split(' ')[1];
-    console.log(token);
     try {
       const decoded: any = verify(token, TOKEN_SECRET);
       const user = await this.indexerService.findById(decoded.id);
       req.user = user;
       next();
     } catch (error) {
-      console.log(error);
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
   }

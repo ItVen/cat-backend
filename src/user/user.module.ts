@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:38
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-02 15:41:00
+ * @LastEditTime: 2021-04-12 17:15:14
  * @Description:
  */
 import {
@@ -31,6 +31,8 @@ export class UserModule implements NestModule {
       .exclude(
         { path: 'user', method: RequestMethod.POST },
         { path: 'user/cat', method: RequestMethod.GET },
+        { path: 'user/list', method: RequestMethod.GET },
+        { path: 'user/list/user', method: RequestMethod.GET },
       )
       .forRoutes(UserController);
   }

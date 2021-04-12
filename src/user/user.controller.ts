@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-08 20:57:02
+ * @LastEditTime: 2021-04-13 00:31:06
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
@@ -51,6 +51,7 @@ export class UserController {
   ): Promise<any> {
     const user = req['user'];
     const data = await this.userService.putMyCell(putUserCellDto, user);
+    console.log(data);
     return {
       success: true,
       code: 200,
@@ -67,6 +68,37 @@ export class UserController {
       success: true,
       code: 200,
       message: '查询name下的ntf卡数据成功',
+      data,
+    };
+  }
+
+  @ApiOperation({ description: '获取所有活在的cell列表' })
+  @Get('list')
+  async getCatList(): Promise<any> {
+    // todo 排序
+    const data = await this.cellService.findAllCat();
+    return {
+      success: true,
+      code: 200,
+      message: '获取所有活在的cell列表',
+      data,
+    };
+  }
+  @ApiOperation({ description: '查看地址下绑定的cat' })
+  @Get('list/user')
+  async getUserCatList(
+    @Req() req: Request,
+    @Query() queryNameDto: QueryNameDto,
+  ): Promise<any> {
+    // todo 排序
+    const data = await this.userService.findUserAllCat(
+      queryNameDto.name,
+      req.headers['authorization'],
+    );
+    return {
+      success: true,
+      code: 200,
+      message: '查看地址下绑定的cat',
       data,
     };
   }

@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 10:40:39
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-08 23:40:51
+ * @LastEditTime: 2021-04-12 23:38:07
  * @Description:
  */
 
@@ -33,11 +33,22 @@ export class CellEntity {
   })
   name: string;
 
-  // @Column('simple-json')
-  // out_point: Record<string, unknown>;
+  @Column('simple-json')
+  out_point: {
+    index: string;
+    tx_hash: string;
+  };
 
-  // @Column('simple-json')
-  // output: Record<string, unknown>;
+  @Column('simple-json')
+  output: {
+    capacity: string;
+    lock: {
+      args: string;
+      code_hash: string;
+      hash_type: string;
+    };
+    type: string;
+  };
 
   @Column({
     type: 'varchar',

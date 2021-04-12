@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-08 23:41:53
+ * @LastEditTime: 2021-04-12 23:58:00
  * @Description:
  */
 import { Injectable } from '@nestjs/common';
@@ -10,7 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CellEntity } from 'src/entity/cell';
 import { IndexerEntity } from 'src/entity/indexer';
 import { PutUserCellDto } from 'src/user/dto';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 
 @Injectable()
 export class CellService {
@@ -33,14 +33,13 @@ export class CellService {
     // todo 查询cell
     let cell = await this.cellRepository.findOne({ name });
     const newCell = new CellEntity();
-    // newCell.output = putUserCellDto.output;
-    // newCell.out_point = putUserCellDto.out_point;
+    newCell.output = putUserCellDto.output;
+    newCell.out_point = putUserCellDto.out_point;
     newCell.output_data = putUserCellDto.output_data;
     newCell.tx_index = putUserCellDto.tx_index;
     newCell.name = putUserCellDto.name;
     newCell.block_number = putUserCellDto.block_number;
     newCell.indexer = user;
-    console.log(newCell);
     if (cell) {
       newCell.indexer = cell.indexer;
       newCell.id = cell.id;
@@ -60,7 +59,27 @@ export class CellService {
     return sum;
   }
   async findOneCat(name: string): Promise<CellEntity> {
-    const cell = await this.cellRepository.findOne({ name });
+    // 返回小猫的绑定地址的数据
+    const cell = await this.cellRepository.findOne({
+      relations: ['indexer'],
+      select: ['output_data'],
+      where: {
+        name,
+        output_data: Not('0x'),
+      },
+    });
+    return cell;
+  }
+  async findAllCat(): Promise<CellEntity[]> {
+    // todo 排序
+    const cell = await this.cellRepository.find({
+      select: ['output_data'],
+      where: {
+        output_data: Not('0x'),
+      },
+    });
+    // todo 返回列表
+
     return cell;
   }
 }

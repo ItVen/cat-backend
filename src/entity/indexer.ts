@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 10:43:34
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-01 17:59:10
+ * @LastEditTime: 2021-04-12 16:41:33
  * @Description:
  */
 
@@ -23,10 +23,17 @@ export class IndexerEntity {
   @Column({
     type: 'varchar',
     length: 50,
-    unique: true,
     comment: '邮箱地址',
+    default: 'test',
   })
   email: string;
+  @Column({
+    type: 'varchar',
+    length: 50,
+    unique: false,
+    comment: 'eth address',
+  })
+  ethAddress: string;
   @Column({
     type: 'varchar',
     length: 250,
