@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-12 23:58:00
+ * @LastEditTime: 2021-04-13 01:38:48
  * @Description:
  */
 import { Injectable } from '@nestjs/common';
@@ -34,6 +34,7 @@ export class CellService {
     let cell = await this.cellRepository.findOne({ name });
     const newCell = new CellEntity();
     newCell.output = putUserCellDto.output;
+    newCell.address = putUserCellDto.address;
     newCell.out_point = putUserCellDto.out_point;
     newCell.output_data = putUserCellDto.output_data;
     newCell.tx_index = putUserCellDto.tx_index;
@@ -44,6 +45,7 @@ export class CellService {
       newCell.indexer = cell.indexer;
       newCell.id = cell.id;
     }
+    console.log(cell);
 
     cell = await this.cellRepository.save(newCell);
     user.cell.push(cell);
@@ -61,8 +63,7 @@ export class CellService {
   async findOneCat(name: string): Promise<CellEntity> {
     // 返回小猫的绑定地址的数据
     const cell = await this.cellRepository.findOne({
-      relations: ['indexer'],
-      select: ['output_data'],
+      select: ['output_data', 'address'],
       where: {
         name,
         output_data: Not('0x'),

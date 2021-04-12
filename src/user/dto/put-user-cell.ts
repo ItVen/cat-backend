@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:57:14
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-12 23:42:23
+ * @LastEditTime: 2021-04-13 01:33:32
  * @Description:
  */
 import { ApiProperty } from '@nestjs/swagger';
@@ -20,6 +20,9 @@ export class PutUserCellDto {
   })
   @IsNotEmpty()
   name: string;
+
+  @IsNotEmpty()
+  address: string;
 
   @ApiProperty({
     type: String,

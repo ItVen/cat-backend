@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-13 00:31:06
+ * @LastEditTime: 2021-04-13 01:41:45
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
@@ -50,6 +50,7 @@ export class UserController {
     @Body() putUserCellDto: PutUserCellDto,
   ): Promise<any> {
     const user = req['user'];
+    console.log(user);
     const data = await this.userService.putMyCell(putUserCellDto, user);
     console.log(data);
     return {
