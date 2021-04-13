@@ -50,7 +50,6 @@ export class UserController {
     @Body() putUserCellDto: PutUserCellDto,
   ): Promise<any> {
     const user = req['user'];
-    console.log(user);
     const data = await this.userService.putMyCell(putUserCellDto, user);
     console.log(data);
     return {

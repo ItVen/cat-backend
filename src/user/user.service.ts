@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:50
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-13 00:36:36
+ * @LastEditTime: 2021-04-13 12:16:03
  * @Description:
  */
 import { HttpException, Injectable } from '@nestjs/common';
@@ -70,12 +70,12 @@ export class UserService {
     }
     return indexer;
   }
-  public generateJWT({ id, email, address }: IndexerEntity): string {
+  public generateJWT({ id, email, ethAddress }: IndexerEntity): string {
     return jwt.sign(
       {
         id,
         email,
-        address,
+        address: ethAddress,
       },
       TOKEN_SECRET,
       {
@@ -89,7 +89,7 @@ export class UserService {
       {
         id: user.id,
         email: user.email,
-        address: user.address,
+        address: user.ethAddress,
       },
       TOKEN_SECRET,
       {
@@ -129,7 +129,7 @@ export class UserService {
     }
     const user = await this.indexerRepository.findOne({
       relations: ['cell'],
-      where: { address: address },
+      where: { ethAddress: address },
     });
     if (mine && user) create_cat = user.create_cat;
     const data = {
