@@ -2,14 +2,19 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-13 01:41:45
+ * @LastEditTime: 2021-04-14 11:17:08
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
 import { Controller, Put, Get, Post, Body } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CellService } from 'src/cell/cell.service';
-import { CreateUserDto, QueryNameDto, PutUserCellDto } from './dto/index';
+import {
+  CreateUserDto,
+  QueryNameDto,
+  PutUserCellDto,
+  IssuesCatDto,
+} from './dto/index';
 import { UserService } from './user.service';
 @ApiTags('用户')
 @Controller('user')
@@ -77,6 +82,24 @@ export class UserController {
   async getCatList(): Promise<any> {
     // todo 排序
     const data = await this.cellService.findAllCat();
+    return {
+      success: true,
+      code: 200,
+      message: '获取所有活在的cell列表',
+      data,
+    };
+  }
+  //
+
+  @ApiOperation({ description: 'issuseCatCat' })
+  @Post('issues')
+  async issuesCat(
+    @Req() req: Request,
+    @Body() cat: IssuesCatDto,
+  ): Promise<any> {
+    // todo 排序
+    const user = req['user'];
+    const data = await this.cellService.issuseCat(user.address, cat);
     return {
       success: true,
       code: 200,

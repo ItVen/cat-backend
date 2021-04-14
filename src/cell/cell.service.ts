@@ -2,15 +2,18 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-13 01:38:48
+ * @LastEditTime: 2021-04-14 15:05:35
  * @Description:
  */
+import { Address, AddressType, Amount, SUDT } from '@lay2/pw-core';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CellEntity } from 'src/entity/cell';
 import { IndexerEntity } from 'src/entity/indexer';
-import { PutUserCellDto } from 'src/user/dto';
+import { SourlyCatType } from 'src/pw/SourlyCatType';
+import { PutUserCellDto, IssuesCatDto } from 'src/user/dto';
 import { Not, Repository } from 'typeorm';
+import { InitPw } from '../pw/initPw';
 
 @Injectable()
 export class CellService {
@@ -82,5 +85,24 @@ export class CellService {
     // todo 返回列表
 
     return cell;
+  }
+
+  async issuseCat(user: string, cat: IssuesCatDto) {
+    const address = new Address(user, AddressType.ckb);
+    const amount = new Amount('1');
+    const sudt = new SourlyCatType(
+      '0x9ec9ae72e4579980e41554100f1219ff97599f8ab7e79c074b30f2fa241a790c',
+    );
+    // todo 交易签名
+    const pw = new InitPw();
+    await pw.getInit(address, sudt);
+    console.log(cat);
+    try {
+      const txHash = await pw.sendTransaction(sudt, address, amount, cat);
+      console.log(txHash);
+      // todo 小猫创建成功
+    } catch (e) {
+      // todo 发送小猫失败
+    }
   }
 }
