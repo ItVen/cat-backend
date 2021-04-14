@@ -28,18 +28,24 @@ import { CatCollector } from './catCollector';
 import { IssuseCatBuilder } from './issuesCatBuilder';
 import { SourlyCatType } from './SourlyCatType';
 
-function setData(data: string, length?: number): string {
-  console.log('data', data);
-  data = data.trim();
+function setData(name: string, length?: number): string {
+  let data = name.trim();
   const bytes = [];
-  for (let i = 0; i < length; i++) {
-    if (data.charCodeAt(i)) {
-      bytes.push(data.charCodeAt(i));
-    } else {
-      bytes.push(0);
-    }
+  for (let i = 0; i < data.length; i++) {
+    bytes.push(data.charCodeAt(i));
   }
-  return bytes.join('');
+  data = byteArrayToHex(bytes);
+  console.log(data, name);
+  if (data.length < length * 2) {
+    console.log('补0:', length * 2 - data.length);
+    for (let i = 0; i < length * 2 - data.length; i++) {
+      data += '00';
+    }
+    console.log('补0后:', data);
+  }
+
+  data = data.replace('0x', '');
+  return data;
 }
 
 export class InitPw {
@@ -66,8 +72,14 @@ export class InitPw {
   ) {
     let data = '0x';
     if (cat) {
-      data = '0x' + setData(cat.name, 32) + cat.hash + setData(cat.fishes, 8);
-      console.log(data.length);
+      const name = setData(cat.name, 16);
+      const hash = setData(cat.hash, 16);
+      const fishes = setData(cat.fishes, 16);
+      data = '0x' + name + hash + fishes;
+      console.log(data.length, data, 'data');
+      console.log(name.length, name, 'name');
+      console.log(hash.length, hash, 'hash');
+      console.log(fishes.length, fishes, 'fishes');
     }
     if (!this.pw) await this.getInit();
     const options = { witnessArgs: Builder.WITNESS_ARGS.RawSecp256k1 };
@@ -83,17 +95,15 @@ export class InitPw {
     console.log(this.pw);
     let tx;
     try {
-      const tx = await builder.build();
-      console.log(tx);
-      const signer = new DefaultSigner(PWCore.provider);
-      console.log(signer);
-      const data = await transformers.TransformTransaction(
-        await signer.sign(tx),
-      );
-      console.log(data);
-      const tx_hash = await this.rpc.send_transaction(data);
-      // tx = await this.pw.sendTransaction(builder);
-      console.log(tx_hash, '-----tx');
+      // const tx = await builder.build();
+      // const signer = new DefaultSigner(PWCore.provider);
+      // const data = await transformers.TransformTransaction(
+      //   await signer.sign(tx),
+      // );
+      // console.log(data);
+      // const tx_hash = await this.rpc.send_transaction(data);
+      tx = await this.pw.sendTransaction(builder);
+      console.log(tx, '-----tx');
     } catch (e) {
       console.log(e);
     }

@@ -82,11 +82,8 @@ export class IssuseCatBuilder extends Builder {
         this.sudt.toTypeScript(),
       );
       sudtCell.setSUDTAmount(new Amount('1', AmountUnit.shannon));
-      console.log(sudtCell.setSUDTAmount);
       if (this.cat) {
         sudtCell.setHexData(this.cat);
-        console.log(sudtCell.getHexData(), 'sudtCell');
-        console.log(sudtCell.getHexData(), 'getHexsudtCell');
       }
       outputCells.push(sudtCell);
     }
