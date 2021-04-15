@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 10:40:39
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-13 01:32:57
+ * @LastEditTime: 2021-04-15 11:56:51
  * @Description:
  */
 
@@ -38,6 +38,11 @@ export class CellEntity {
     comment: 'address',
   })
   address: string;
+  @Column({
+    type: 'varchar',
+    comment: 'userdata',
+  })
+  userdata: string;
 
   @Column('simple-json')
   out_point: {

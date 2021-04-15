@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 16:53:08
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-02 17:24:24
+ * @LastEditTime: 2021-04-16 00:24:42
  * @Description:
  */
 import { Req } from '@nestjs/common';
@@ -38,7 +38,6 @@ export class TxController {
   async pushMyTxBattle(
     @Body() transfer: CreateBattleTransferDataDto,
   ): Promise<any> {
-    // todo
     const data = await this.battleService.pushMyTx(transfer);
     return {
       success: true,

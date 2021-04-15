@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-14 15:05:35
+ * @LastEditTime: 2021-04-15 23:32:55
  * @Description:
  */
 import { Address, AddressType, Amount, SUDT } from '@lay2/pw-core';
@@ -40,6 +40,7 @@ export class CellService {
     newCell.address = putUserCellDto.address;
     newCell.out_point = putUserCellDto.out_point;
     newCell.output_data = putUserCellDto.output_data;
+    newCell.userdata = putUserCellDto.userdata;
     newCell.tx_index = putUserCellDto.tx_index;
     newCell.name = putUserCellDto.name;
     newCell.block_number = putUserCellDto.block_number;
@@ -66,10 +67,10 @@ export class CellService {
   async findOneCat(name: string): Promise<CellEntity> {
     // 返回小猫的绑定地址的数据
     const cell = await this.cellRepository.findOne({
-      select: ['output_data', 'address'],
+      select: ['output', 'output_data', 'userdata', 'address'],
       where: {
         name,
-        output_data: Not('0x'),
+        // output_data: Not('0x'),
       },
     });
     return cell;
@@ -77,13 +78,12 @@ export class CellService {
   async findAllCat(): Promise<CellEntity[]> {
     // todo 排序
     const cell = await this.cellRepository.find({
-      select: ['output_data'],
+      select: ['userdata'],
       where: {
-        output_data: Not('0x'),
+        // output_data: Not('0x'),
       },
     });
     // todo 返回列表
-
     return cell;
   }
 
@@ -97,12 +97,14 @@ export class CellService {
     const pw = new InitPw();
     await pw.getInit(address, sudt);
     console.log(cat);
+    let txHash;
     try {
-      const txHash = await pw.sendTransaction(sudt, address, amount, cat);
+      txHash = await pw.sendTransaction(sudt, address, amount, cat);
       console.log(txHash);
       // todo 小猫创建成功
     } catch (e) {
       // todo 发送小猫失败
     }
+    return txHash;
   }
 }

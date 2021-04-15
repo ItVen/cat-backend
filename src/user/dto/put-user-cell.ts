@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:57:14
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-13 01:33:32
+ * @LastEditTime: 2021-04-15 11:57:22
  * @Description:
  */
 import { ApiProperty } from '@nestjs/swagger';
@@ -61,7 +61,12 @@ export class PutUserCellDto {
   })
   @IsNotEmpty()
   output_data: string;
-
+  @ApiProperty({
+    type: String,
+    description: 'userdata',
+  })
+  @IsNotEmpty()
+  userdata: string;
   @ApiProperty({
     type: String,
     description: 'tx_index',

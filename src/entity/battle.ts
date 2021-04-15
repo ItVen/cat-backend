@@ -65,11 +65,11 @@ export class BattleEntity {
 
   @OneToOne(() => BattleStatus)
   @JoinColumn() // 战斗发起
-  battle_started: BattleStatus;
+  battle_winner: BattleStatus;
 
   @OneToOne(() => BattleStatus)
   @JoinColumn() // 战斗接受
-  battle_accept: BattleStatus;
+  battle_loser: BattleStatus;
 
   @CreateDateColumn({
     type: 'timestamp',

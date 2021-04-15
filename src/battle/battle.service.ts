@@ -8,6 +8,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BattleEntity } from 'src/entity/battle';
+import { StatusService } from 'src/status/status.service';
 import {
   UpdateTransferDataDto,
   CreateBattleTransferDataDto,
@@ -19,6 +20,7 @@ export class BattleService {
   constructor(
     @InjectRepository(BattleEntity)
     private readonly txRepository: Repository<BattleEntity>,
+    private readonly statusService: StatusService,
   ) {}
   async updateMyTx(transfer: UpdateTransferDataDto): Promise<BattleEntity> {
     let tx = await this.txRepository.findOne({ tx_hash: transfer.txHash });
@@ -28,8 +30,29 @@ export class BattleService {
     return tx;
   }
 
-  async pushMyTx(tx: CreateBattleTransferDataDto): Promise<BattleEntity> {
+  async pushMyTx(battle: CreateBattleTransferDataDto): Promise<BattleEntity> {
+    const tx = await this.txRepository.findOne({ tx_hash: battle.txHash });
     console.log(tx);
-    return null;
+    if (tx) return null;
+    // todo 创建statue
+    const winerState = this.statusService.createState(
+      battle.winer,
+      battle.afterWiner,
+      battle.winnerFishes,
+    );
+    const loserState = this.statusService.createState(
+      battle.loser,
+      battle.afterLoser,
+      battle.loserFishes,
+    );
+    const state = await Promise.all([winerState, loserState]);
+    console.log(state);
+    const newBattle = new BattleEntity();
+    newBattle.names = battle.winer.name + ',' + battle.loser.name;
+    newBattle.winner = battle.winer.name;
+    newBattle.tx_hash = battle.txHash;
+    newBattle.battle_winner = state[0];
+    newBattle.battle_loser = state[1];
+    await this.txRepository.save(newBattle);
   }
 }

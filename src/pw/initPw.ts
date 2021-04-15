@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-14 10:40:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-14 15:42:05
+ * @LastEditTime: 2021-04-15 11:54:59
  * @Description:服务端发Cat的builder
  * ```jsx
 address: ckt1qyqtvs9fmetyahkm4mjm4strw7yacr9avsrq4vua54
@@ -23,34 +23,30 @@ import PWCore, {
   DefaultSigner,
 } from '@lay2/pw-core';
 import { RPC, transformers } from 'ckb-js-toolkit';
+import e from 'express';
 import { IssuesCatDto } from 'src/user/dto';
 import { CatCollector } from './catCollector';
 import { IssuseCatBuilder } from './issuesCatBuilder';
 import { SourlyCatType } from './SourlyCatType';
 
-function setData(name: string, length?: number): string {
-  let data = name.trim();
-  const bytes = [];
-  for (let i = 0; i < data.length; i++) {
-    bytes.push(data.charCodeAt(i));
-  }
-  data = byteArrayToHex(bytes);
-  console.log(data, name);
-  if (data.length < length * 2) {
-    console.log('补0:', length * 2 - data.length);
-    for (let i = 0; i < length * 2 - data.length; i++) {
-      data += '00';
+async function waitUntilCommitted(txHash: string, rpc: RPC, timeout = 180) {
+  for (let index = 0; index < timeout; index++) {
+    const data = await rpc.get_transaction(txHash);
+    console.log(data);
+    const status = data.tx_status.status;
+    console.log(`tx ${txHash} is ${status}, waited for ${index} seconds`);
+    await asyncSleep(1000);
+    if (status === 'committed') {
+      return;
     }
-    console.log('补0后:', data);
   }
-
-  data = data.replace('0x', '');
-  return data;
+  throw new Error(`tx ${txHash} not committed in ${timeout} seconds`);
 }
 
 export class InitPw {
   pw: PWCore;
   collector: CatCollector;
+  provider: RawProvider;
   rpc: RPC;
   async getInit(address?: Address, usdt?: SourlyCatType) {
     if (this.pw) return this.pw;
@@ -58,10 +54,10 @@ export class InitPw {
     const INDEXER_URL = 'https://testnet.ckb.dev/indexer';
     const privateKey =
       '0xe7b336b4c698ed048e550db6bab1c99fc3ed3784c8b1e139d4aaa204e87381aa';
-    const provider = new RawProvider(privateKey);
+    this.provider = new RawProvider(privateKey);
     this.collector = new CatCollector(INDEXER_URL);
     this.rpc = new RPC(CKB_URL);
-    this.pw = await new PWCore(CKB_URL).init(provider, this.collector);
+    this.pw = await new PWCore(CKB_URL).init(this.provider, this.collector);
     return this.pw;
   }
   async sendTransaction(
@@ -72,14 +68,8 @@ export class InitPw {
   ) {
     let data = '0x';
     if (cat) {
-      const name = setData(cat.name, 16);
-      const hash = setData(cat.hash, 16);
-      const fishes = setData(cat.fishes, 16);
-      data = '0x' + name + hash + fishes;
+      data = cat.output_data;
       console.log(data.length, data, 'data');
-      console.log(name.length, name, 'name');
-      console.log(hash.length, hash, 'hash');
-      console.log(fishes.length, fishes, 'fishes');
     }
     if (!this.pw) await this.getInit();
     const options = { witnessArgs: Builder.WITNESS_ARGS.RawSecp256k1 };
@@ -94,6 +84,8 @@ export class InitPw {
     );
     console.log(this.pw);
     let tx;
+    const fromBefore = await this.collector.getBalance(this.provider.address);
+    const toBefore = await this.collector.getBalance(address);
     try {
       // const tx = await builder.build();
       // const signer = new DefaultSigner(PWCore.provider);
@@ -107,6 +99,13 @@ export class InitPw {
     } catch (e) {
       console.log(e);
     }
+    await waitUntilCommitted(tx, this.rpc);
+    const fromAfter = await this.collector.getBalance(this.provider.address);
+    const toAfter = await this.collector.getBalance(address);
+    console.log({ fromBefore, toBefore, fromAfter, toAfter });
     return tx;
   }
+}
+function asyncSleep(arg0: number) {
+  throw new Error('Function not implemented.');
 }

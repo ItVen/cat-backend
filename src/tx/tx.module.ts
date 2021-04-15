@@ -14,12 +14,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthMiddleware } from 'src/middleware/auth.middleware';
 import { BattleEntity } from 'src/entity/battle';
 import { BattleService } from 'src/battle/battle.service';
+import { BattleStatus } from 'src/entity/battleStatus';
+import { StatusService } from 'src/status/status.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TransferEntity, BattleEntity])],
+  imports: [
+    TypeOrmModule.forFeature([TransferEntity, BattleEntity, BattleStatus]),
+  ],
   controllers: [TxController],
-  providers: [TxService, BattleService],
-  exports: [TxService, BattleService],
+  providers: [TxService, BattleService, StatusService],
+  exports: [TxService, BattleService, StatusService],
 })
 export class TxModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

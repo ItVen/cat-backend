@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-14 11:17:08
+ * @LastEditTime: 2021-04-15 18:34:47
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
@@ -123,6 +123,28 @@ export class UserController {
       code: 200,
       message: '查看地址下绑定的cat',
       data,
+    };
+  }
+
+  @ApiOperation({ description: '获取battle的用户对信息' })
+  @Get('battle')
+  async getBattleUser(
+    @Req() req: Request,
+    @Query() queryNameDto: QueryNameDto,
+  ): Promise<any> {
+    // todo 排序
+    const user = req['user'];
+    const data = await this.cellService.findOneCat(queryNameDto.name);
+
+    console.log(user);
+    return {
+      success: true,
+      code: 200,
+      message: '获取battle的用户对信息',
+      data: {
+        mine: user.cell[0],
+        battle: data,
+      },
     };
   }
 }
