@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CellEntity } from 'src/entity/cell';
 import { IndexerEntity } from 'src/entity/indexer';
 import { SourlyCatType } from 'src/pw/SourlyCatType';
+import { NTFCat } from 'src/tx/dto/create-battle-transfer-data.dto';
 import { PutUserCellDto, IssuesCatDto } from 'src/user/dto';
 import { Not, Repository } from 'typeorm';
 import { InitPw } from '../pw/initPw';
@@ -75,6 +76,20 @@ export class CellService {
     });
     return cell;
   }
+
+  async updateOneCat(before: NTFCat, after: NTFCat) {
+    // 返回小猫的绑定地址的数据
+    const cell = await this.cellRepository.findOne({
+      name: before.name,
+    });
+    console.log(cell);
+    cell.userdata = JSON.stringify({
+      fishes: after.fishes,
+      hash: after.hash,
+    });
+    await this.cellRepository.save(cell);
+  }
+
   async findAllCat(): Promise<CellEntity[]> {
     // todo 排序
     const cell = await this.cellRepository.find({

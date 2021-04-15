@@ -7,6 +7,7 @@
  */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CellService } from 'src/cell/cell.service';
 import { BattleEntity } from 'src/entity/battle';
 import { StatusService } from 'src/status/status.service';
 import {
@@ -21,6 +22,7 @@ export class BattleService {
     @InjectRepository(BattleEntity)
     private readonly txRepository: Repository<BattleEntity>,
     private readonly statusService: StatusService,
+    private readonly cellService: CellService,
   ) {}
   async updateMyTx(transfer: UpdateTransferDataDto): Promise<BattleEntity> {
     let tx = await this.txRepository.findOne({ tx_hash: transfer.txHash });
@@ -46,7 +48,6 @@ export class BattleService {
       battle.loserFishes,
     );
     const state = await Promise.all([winerState, loserState]);
-    console.log(state);
     const newBattle = new BattleEntity();
     newBattle.names = battle.winer.name + ',' + battle.loser.name;
     newBattle.winner = battle.winer.name;
@@ -54,5 +55,16 @@ export class BattleService {
     newBattle.battle_winner = state[0];
     newBattle.battle_loser = state[1];
     await this.txRepository.save(newBattle);
+    // todo  交易状态查询更新
+    // todo 更新cell数据
+    const cell1 = this.cellService.updateOneCat(
+      battle.winer,
+      battle.afterWiner,
+    );
+    const cell2 = this.cellService.updateOneCat(
+      battle.loser,
+      battle.afterLoser,
+    );
+    await Promise.all([cell1, cell2]);
   }
 }
