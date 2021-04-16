@@ -43,7 +43,7 @@ export class TxController {
       success: true,
       code: 200,
       message: '请求提交我的战斗交易成功',
-      data,
+      data: { state: data },
     };
   }
   @ApiOperation({ description: '查询排行榜' })

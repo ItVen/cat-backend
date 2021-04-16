@@ -32,10 +32,9 @@ export class BattleService {
     return tx;
   }
 
-  async pushMyTx(battle: CreateBattleTransferDataDto): Promise<BattleEntity> {
+  async pushMyTx(battle: CreateBattleTransferDataDto): Promise<boolean> {
     const tx = await this.txRepository.findOne({ tx_hash: battle.txHash });
-    console.log(tx);
-    if (tx) return null;
+    if (tx) return false;
     // todo 创建statue
     const winerState = this.statusService.createState(
       battle.winer,
@@ -57,6 +56,7 @@ export class BattleService {
     await this.txRepository.save(newBattle);
     // todo  交易状态查询更新
     // todo 更新cell数据
+    console.log('--------cell state');
     const cell1 = this.cellService.updateOneCat(
       battle.winer,
       battle.afterWiner,
@@ -66,5 +66,6 @@ export class BattleService {
       battle.afterLoser,
     );
     await Promise.all([cell1, cell2]);
+    return true;
   }
 }

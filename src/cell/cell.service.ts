@@ -60,7 +60,7 @@ export class CellService {
   getFisherCount(cells: CellEntity[]): number {
     let sum = 0;
     for (const item of cells) {
-      const data = JSON.parse(item.output_data);
+      const data = JSON.parse(item.userdata);
       sum += data.fishes;
     }
     return sum;
@@ -84,6 +84,7 @@ export class CellService {
     });
     console.log(cell);
     cell.userdata = JSON.stringify({
+      name: cell.name,
       fishes: after.fishes,
       hash: after.hash,
     });
