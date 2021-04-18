@@ -2,12 +2,13 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-15 18:34:47
+ * @LastEditTime: 2021-04-18 22:06:03
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
 import { Controller, Put, Get, Post, Body } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import e from 'express';
 import { CellService } from 'src/cell/cell.service';
 import {
   CreateUserDto,
@@ -56,7 +57,6 @@ export class UserController {
   ): Promise<any> {
     const user = req['user'];
     const data = await this.userService.putMyCell(putUserCellDto, user);
-    console.log(data);
     return {
       success: true,
       code: 200,
@@ -128,23 +128,33 @@ export class UserController {
 
   @ApiOperation({ description: '获取battle的用户对信息' })
   @Get('battle')
-  async getBattleUser(
-    @Req() req: Request,
-    @Query() queryNameDto: QueryNameDto,
-  ): Promise<any> {
-    // todo 排序
+  async getBattleUser(@Req() req: Request): Promise<any> {
     const user = req['user'];
-    const data = await this.cellService.findOneCat(queryNameDto.name);
-
-    console.log(user);
+    const d1 = this.cellService.findOneCat(null, user);
+    const d2 = this.cellService.findMineCat(user);
+    const data = await Promise.all([d1, d2]);
+    let success = false;
+    if (data[1]) success = true;
     return {
-      success: true,
-      code: 200,
+      success,
+      code: 220,
       message: '获取battle的用户对信息',
       data: {
-        mine: user.cell[0],
-        battle: data,
+        mine: data[1],
+        battle: data[0],
       },
+    };
+  }
+  @ApiOperation({ description: '查看我的Cat' })
+  @Post('mine')
+  async getMineCat(@Req() req: Request): Promise<any> {
+    const user = req['user'];
+    const data = await this.cellService.findMineCat(user);
+    return {
+      success: true,
+      code: 220,
+      message: '查看我的Cat',
+      data,
     };
   }
 }

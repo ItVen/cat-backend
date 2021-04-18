@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-14 10:40:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-14 12:37:12
+ * @LastEditTime: 2021-04-18 20:37:50
  * @Description:服务端发Cat的builder
  */
 import PWCore, {
@@ -35,10 +35,8 @@ export class IssuseCatBuilder extends Builder {
   ) {
     super(feeRate, collector, options.witnessArgs);
     this.cat = cat;
-    console.log(cat, 'cat');
   }
   async build(): Promise<Transaction> {
-    console.log(this.cat, 'build');
     if (
       this.sudt.issuerLockHash !==
       PWCore.provider.address.toLockScript().toHash()
@@ -59,7 +57,6 @@ export class IssuseCatBuilder extends Builder {
     const neededAmount = ckbAmount;
     // .add(Builder.MIN_CHANGE)
     // .add(Builder.MIN_CHANGE);
-    console.log(neededAmount);
     const unspentCells = await this.collector.collect(PWCore.provider.address, {
       neededAmount,
     });
@@ -98,7 +95,7 @@ export class IssuseCatBuilder extends Builder {
 
   private rectifyTx(inputCells: Cell[], outputCells: Cell[]) {
     const outPoint = new OutPoint(
-      '0x297fb72de7f76ba0784e63dff941b01cbbb372a26c0786d2d511ae9709d8ca57',
+      '0x3c6fbb3bbda63274635df9304a7cc55913a5454aafecb34bbefe3f17209d5f63',
       '0x0',
     );
     const catCelldep = new CellDep(DepType.code, outPoint);
@@ -110,7 +107,7 @@ export class IssuseCatBuilder extends Builder {
     );
     // console.log(this.witnessArgs.lock, this.witnessArgs.lock.length);
     this.fee = Builder.calcFee(tx, this.feeRate);
-    console.log(JSON.stringify(tx), 'rectifyTx');
+    // console.log(JSON.stringify(tx), 'rectifyTx');
     return tx;
   }
 }

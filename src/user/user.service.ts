@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:50
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-13 12:16:03
+ * @LastEditTime: 2021-04-18 21:33:33
  * @Description:
  */
 import { HttpException, Injectable } from '@nestjs/common';
@@ -31,11 +31,12 @@ export class UserService {
     putUserCellDto: PutUserCellDto,
     user: IndexerEntity,
   ): Promise<IndexerEntity> {
-    const cells = await this.cellService.createOrUpdateCellData(
+    const users = await this.cellService.createOrUpdateCellData(
       putUserCellDto,
       user,
     );
-    user = await this.indexerRepository.save(cells);
+    // todo 报错 更新保存方式
+    user = await this.indexerRepository.save(users);
     return user;
   }
   async createMyIndexer({
@@ -62,7 +63,7 @@ export class UserService {
 
   async findById(id: number): Promise<IndexerEntity> {
     const indexer = await this.indexerRepository.findOne({
-      relations: ['cell'],
+      // relations: ['cell'],
       where: { id },
     });
     if (!indexer) {

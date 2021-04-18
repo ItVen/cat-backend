@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-15 23:32:55
+ * @LastEditTime: 2021-04-18 22:39:40
  * @Description:
  */
 import { Address, AddressType, Amount, SUDT } from '@lay2/pw-core';
@@ -31,10 +31,7 @@ export class CellService {
     putUserCellDto: PutUserCellDto,
     user: IndexerEntity,
   ): Promise<IndexerEntity> {
-    // todo cell 查询
-    // todo 创建 或者更新
     const name = putUserCellDto.name;
-    // todo 查询cell
     let cell = await this.cellRepository.findOne({ name });
     const newCell = new CellEntity();
     newCell.output = putUserCellDto.output;
@@ -50,10 +47,8 @@ export class CellService {
       newCell.indexer = cell.indexer;
       newCell.id = cell.id;
     }
-    console.log(cell);
-
     cell = await this.cellRepository.save(newCell);
-    user.cell.push(cell);
+    // user.cell.push(cell);
     user.create_cat = 0;
     return user;
   }
@@ -65,14 +60,34 @@ export class CellService {
     }
     return sum;
   }
-  async findOneCat(name: string): Promise<CellEntity> {
+  async findOneCat(name?: string, mine?: IndexerEntity): Promise<CellEntity> {
     // 返回小猫的绑定地址的数据
+    let where;
+    if (!name) {
+      where = {
+        indexer: Not(mine.id),
+      };
+    } else {
+      where = {
+        name,
+      };
+    }
     const cell = await this.cellRepository.findOne({
       select: ['output', 'output_data', 'userdata', 'address'],
-      where: {
-        name,
-        // output_data: Not('0x'),
-      },
+      where,
+    });
+    return cell;
+  }
+
+  async findMineCat(mine?: IndexerEntity): Promise<CellEntity> {
+    // 返回小猫的绑定地址的数据
+    const where = {
+      indexer: mine.id,
+    };
+    console.log(where);
+    const cell = await this.cellRepository.findOne({
+      select: ['output', 'output_data', 'userdata', 'address'],
+      where,
     });
     return cell;
   }
@@ -82,7 +97,6 @@ export class CellService {
     const cell = await this.cellRepository.findOne({
       name: before.name,
     });
-    console.log(cell);
     cell.userdata = JSON.stringify({
       name: cell.name,
       fishes: after.fishes,
@@ -110,9 +124,9 @@ export class CellService {
       '0x9ec9ae72e4579980e41554100f1219ff97599f8ab7e79c074b30f2fa241a790c',
     );
     // todo 交易签名
+    console.log(cat);
     const pw = new InitPw();
     await pw.getInit(address, sudt);
-    console.log(cat);
     let txHash;
     try {
       txHash = await pw.sendTransaction(sudt, address, amount, cat);
@@ -120,6 +134,7 @@ export class CellService {
       // todo 小猫创建成功
     } catch (e) {
       // todo 发送小猫失败
+      return false;
     }
     return txHash;
   }

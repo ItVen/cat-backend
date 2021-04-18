@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-14 10:40:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-15 11:54:59
+ * @LastEditTime: 2021-04-18 22:42:37
  * @Description:服务端发Cat的builder
  * ```jsx
 address: ckt1qyqtvs9fmetyahkm4mjm4strw7yacr9avsrq4vua54
@@ -32,9 +32,9 @@ import { SourlyCatType } from './SourlyCatType';
 async function waitUntilCommitted(txHash: string, rpc: RPC, timeout = 180) {
   for (let index = 0; index < timeout; index++) {
     const data = await rpc.get_transaction(txHash);
-    console.log(data);
     const status = data.tx_status.status;
     console.log(`tx ${txHash} is ${status}, waited for ${index} seconds`);
+    console.log('asyncSleep 1000');
     await asyncSleep(1000);
     if (status === 'committed') {
       return;
@@ -82,7 +82,6 @@ export class InitPw {
       data,
       options,
     );
-    console.log(this.pw);
     let tx;
     const fromBefore = await this.collector.getBalance(this.provider.address);
     const toBefore = await this.collector.getBalance(address);
@@ -99,10 +98,11 @@ export class InitPw {
     } catch (e) {
       console.log(e);
     }
-    await waitUntilCommitted(tx, this.rpc);
-    const fromAfter = await this.collector.getBalance(this.provider.address);
-    const toAfter = await this.collector.getBalance(address);
-    console.log({ fromBefore, toBefore, fromAfter, toAfter });
+    // tod
+    // await waitUntilCommitted(tx, this.rpc);
+    // const fromAfter = await this.collector.getBalance(this.provider.address);
+    // const toAfter = await this.collector.getBalance(address);
+    // console.log({ fromBefore, toBefore, fromAfter, toAfter });
     return tx;
   }
 }
