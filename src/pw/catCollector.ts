@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-14 13:40:15
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-14 15:42:58
+ * @LastEditTime: 2021-04-19 01:09:13
  * @Description: 重写indexerCollector的getSUDTBalance和collectSUDT方法
  */
 import {
@@ -12,9 +12,7 @@ import {
   Cell,
   Collector,
   CollectorOptions,
-  OutPoint,
 } from '@lay2/pw-core';
-import axios from 'axios';
 import {
   CkbIndexer,
   HexString,
