@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:50
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-18 21:33:33
+ * @LastEditTime: 2021-04-19 16:11:35
  * @Description:
  */
 import { HttpException, Injectable } from '@nestjs/common';
@@ -24,6 +24,7 @@ export class UserService {
   ) {}
 
   async findNameUsed(name: string): Promise<any> {
+    console.log(name);
     const used = await this.cellService.findNameUsed(name);
     return { used };
   }

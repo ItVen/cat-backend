@@ -2,18 +2,18 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-18 22:06:03
+ * @LastEditTime: 2021-04-19 16:14:00
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
 import { Controller, Put, Get, Post, Body } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import e from 'express';
 import { CellService } from 'src/cell/cell.service';
 import {
   CreateUserDto,
   QueryNameDto,
   PutUserCellDto,
+  QueryCatNameDto,
   IssuesCatDto,
 } from './dto/index';
 import { UserService } from './user.service';
@@ -38,9 +38,8 @@ export class UserController {
   }
 
   @Get('name')
-  async getIsNameRepeat(@Query() queryNameDto: QueryNameDto): Promise<any> {
+  async getIsNameRepeat(@Query() queryNameDto: QueryCatNameDto): Promise<any> {
     const data = await this.userService.findNameUsed(queryNameDto.name);
-    console.log(data);
     return {
       success: true,
       code: 200,
