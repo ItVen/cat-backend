@@ -24,7 +24,6 @@ export class TransferEntity {
   @Column({
     type: 'varchar',
     length: 250,
-    unique: true,
     comment: '转账接受地址',
   })
   to: string;
@@ -32,7 +31,6 @@ export class TransferEntity {
   @Column({
     type: 'varchar',
     length: 250,
-    unique: true,
     comment: '转账发起地址',
   })
   from: string;
@@ -40,13 +38,12 @@ export class TransferEntity {
   @Column({
     type: 'varchar',
     length: 50,
-    unique: true,
     comment: 'cat名字',
   })
   name: string;
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 250,
     unique: true,
     comment: '交易记录',
   })

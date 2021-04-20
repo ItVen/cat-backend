@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-14 10:40:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-18 20:37:50
+ * @LastEditTime: 2021-04-20 14:47:13
  * @Description:服务端发Cat的builder
  */
 import PWCore, {
@@ -98,6 +98,7 @@ export class IssuseCatBuilder extends Builder {
       '0x3c6fbb3bbda63274635df9304a7cc55913a5454aafecb34bbefe3f17209d5f63',
       '0x0',
     );
+
     const catCelldep = new CellDep(DepType.code, outPoint);
     const sudtCellDeps = [PWCore.config.defaultLock.cellDep, catCelldep];
     const tx = new Transaction(

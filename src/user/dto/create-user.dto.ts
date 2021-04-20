@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 10:49:35
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-12 16:33:16
+ * @LastEditTime: 2021-04-20 17:17:19
  * @Description:
  */
 import { ApiProperty } from '@nestjs/swagger';
@@ -26,4 +26,10 @@ export class CreateUserDto {
   })
   @IsNotEmpty()
   readonly address: string;
+  @ApiProperty({
+    type: String,
+    description: '当前账户下的live cell 数',
+  })
+  @IsNotEmpty()
+  readonly liveCells: number;
 }

@@ -14,7 +14,7 @@ export class BattleStatus {
   id: string;
   @Column({
     type: 'varchar',
-    length: 20,
+    length: 32,
     comment: 'cat名字',
   })
   cat_name: string;
@@ -27,26 +27,28 @@ export class BattleStatus {
   address: string;
 
   @Column({
-    type: 'int',
+    type: 'varchar',
+    length: 5,
     comment: '战前fishes',
   })
   before_fishes: string;
 
   @Column({
-    type: 'int',
+    type: 'varchar',
+    length: 5,
     comment: '战后fishes',
   })
   after_fishes: string;
 
   @Column({
     type: 'varchar',
-    length: 250,
+    length: 80,
     comment: '战前hash',
   })
   before_hash: string;
   @Column({
     type: 'varchar',
-    length: 250,
+    length: 80,
     comment: '战后hash',
   })
   after_hash: string;

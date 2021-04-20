@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-20 13:43:48
+ * @LastEditTime: 2021-04-20 17:33:14
  * @Description:
  */
 import { Address, AddressType, Amount, SUDT } from '@lay2/pw-core';
@@ -139,5 +139,9 @@ export class CellService {
       return false;
     }
     return txHash;
+  }
+  async updateCellDeaed(indexer) {
+    // cell dead
+    await this.cellRepository.delete({ indexer });
   }
 }

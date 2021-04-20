@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:50
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-19 16:11:35
+ * @LastEditTime: 2021-04-20 17:30:35
  * @Description:
  */
 import { HttpException, Injectable } from '@nestjs/common';
@@ -38,18 +38,19 @@ export class UserService {
     );
     // todo 报错 更新保存方式
     user = await this.indexerRepository.save(users);
+    // todo 判断是否移除cell
     return user;
   }
   async createMyIndexer({
     address,
     email,
     ethAddress,
+    liveCells,
   }: CreateUserDto): Promise<any> {
     let where;
     if (email) where = { email };
     if (ethAddress) where = { ethAddress };
     const user = await this.indexerRepository.findOne({
-      relations: ['cell'],
       where,
     });
     if (user) return this.buildUserRO(user);
@@ -57,8 +58,11 @@ export class UserService {
     newUser.address = address;
     if (email) newUser.email = email;
     newUser.ethAddress = ethAddress;
-    newUser.cell = [];
     const savedUser = await this.indexerRepository.save(newUser);
+    if (liveCells == 0) {
+      // todo 清除账户下的cell
+      this.cellService.updateCellDeaed(savedUser.id);
+    }
     return this.buildUserRO(savedUser);
   }
 
@@ -101,13 +105,7 @@ export class UserService {
   }
   private buildUserRO(user: IndexerEntity) {
     // todo 计算小鱼干
-    const cells = this.cellService.getFisherCount(user.cell);
     const userRO = {
-      // id: user.id,
-      // email: user.email,
-      create_cat: user.create_cat,
-      // address: user.address,
-      fishes: cells,
       token: this.generateJWT(user),
     };
 
