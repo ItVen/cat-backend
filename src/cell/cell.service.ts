@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-18 22:39:40
+ * @LastEditTime: 2021-04-20 11:11:04
  * @Description:
  */
 import { Address, AddressType, Amount, SUDT } from '@lay2/pw-core';
@@ -63,7 +63,7 @@ export class CellService {
   async findOneCat(name?: string, mine?: IndexerEntity): Promise<CellEntity> {
     // 返回小猫的绑定地址的数据
     let where;
-    if (!name) {
+    if (!name || name == '雷兔') {
       where = {
         indexer: Not(mine.id),
       };
@@ -72,8 +72,9 @@ export class CellService {
         name,
       };
     }
+    console.log(where);
     const cell = await this.cellRepository.findOne({
-      select: ['output', 'output_data', 'userdata', 'address'],
+      select: ['output', 'output_data', 'userdata', 'address', 'name'],
       where,
     });
     return cell;
@@ -86,7 +87,7 @@ export class CellService {
     };
     console.log(where);
     const cell = await this.cellRepository.findOne({
-      select: ['output', 'output_data', 'userdata', 'address'],
+      select: ['output', 'output_data', 'userdata', 'address', 'name'],
       where,
     });
     return cell;

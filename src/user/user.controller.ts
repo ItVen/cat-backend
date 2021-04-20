@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-19 16:14:00
+ * @LastEditTime: 2021-04-20 11:10:26
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
@@ -127,13 +127,20 @@ export class UserController {
 
   @ApiOperation({ description: '获取battle的用户对信息' })
   @Get('battle')
-  async getBattleUser(@Req() req: Request): Promise<any> {
+  async getBattleUser(
+    @Req() req: Request,
+    @Query() queryNameDto: QueryNameDto,
+  ): Promise<any> {
     const user = req['user'];
-    const d1 = this.cellService.findOneCat(null, user);
+    const d1 = this.cellService.findOneCat(queryNameDto.name, user);
     const d2 = this.cellService.findMineCat(user);
     const data = await Promise.all([d1, d2]);
     let success = false;
     if (data[1]) success = true;
+    console.log(data[1].name == data[0].name);
+    if (data[1].name == data[0].name) {
+      data[0] = await this.cellService.findOneCat('雷兔', user);
+    }
     return {
       success,
       code: 220,
