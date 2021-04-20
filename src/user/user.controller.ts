@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-03-31 20:40:23
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-20 11:10:26
+ * @LastEditTime: 2021-04-20 13:46:09
  * @Description:
  */
 import { Query, Req, Request } from '@nestjs/common';
@@ -132,13 +132,14 @@ export class UserController {
     @Query() queryNameDto: QueryNameDto,
   ): Promise<any> {
     const user = req['user'];
+    console.log(user, queryNameDto.name);
     const d1 = this.cellService.findOneCat(queryNameDto.name, user);
     const d2 = this.cellService.findMineCat(user);
     const data = await Promise.all([d1, d2]);
     let success = false;
     if (data[1]) success = true;
-    console.log(data[1].name == data[0].name);
-    if (data[1].name == data[0].name) {
+    console.log(data[1], 'data[1]', data);
+    if (data[1] && data[1].name == data[0].name) {
       data[0] = await this.cellService.findOneCat('雷兔', user);
     }
     return {

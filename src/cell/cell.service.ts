@@ -2,7 +2,7 @@
  * @Author: Aven
  * @Date: 2021-04-01 14:37:37
  * @LastEditors: Aven
- * @LastEditTime: 2021-04-20 11:11:04
+ * @LastEditTime: 2021-04-20 13:43:48
  * @Description:
  */
 import { Address, AddressType, Amount, SUDT } from '@lay2/pw-core';
@@ -85,11 +85,12 @@ export class CellService {
     const where = {
       indexer: mine.id,
     };
-    console.log(where);
+    console.log(where, 'where');
     const cell = await this.cellRepository.findOne({
       select: ['output', 'output_data', 'userdata', 'address', 'name'],
       where,
     });
+    console.log(cell, 'cell');
     return cell;
   }
 
