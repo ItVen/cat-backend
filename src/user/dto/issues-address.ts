@@ -32,4 +32,10 @@ export class IssuesCatDto {
   })
   @IsNotEmpty()
   readonly output_data: string;
+  @ApiProperty({
+    type: String,
+    description: 'ckb_address',
+  })
+  @IsNotEmpty()
+  readonly ckb_address: string;
 }

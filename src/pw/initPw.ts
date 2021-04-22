@@ -99,7 +99,7 @@ export class InitPw {
       console.log(e);
     }
     // tod
-    await waitUntilCommitted(tx, this.rpc);
+    // await waitUntilCommitted(tx, this.rpc);
     // const fromAfter = await this.collector.getBalance(this.provider.address);
     // const toAfter = await this.collector.getBalance(address);
     // console.log({ fromBefore, toBefore, fromAfter, toAfter });

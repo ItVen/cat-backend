@@ -33,6 +33,7 @@ export class UserModule implements NestModule {
         { path: 'user/cat', method: RequestMethod.GET },
         { path: 'user/list', method: RequestMethod.GET },
         { path: 'user/list/user', method: RequestMethod.GET },
+        { path: 'user/issues', method: RequestMethod.POST },
       )
       .forRoutes(UserController);
   }

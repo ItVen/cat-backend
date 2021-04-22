@@ -92,13 +92,9 @@ export class UserController {
 
   @ApiOperation({ description: 'issuseCatCat' })
   @Post('issues')
-  async issuesCat(
-    @Req() req: Request,
-    @Body() cat: IssuesCatDto,
-  ): Promise<any> {
+  async issuesCat(@Body() cat: IssuesCatDto): Promise<any> {
     // todo 排序
-    const user = req['user'];
-    const data = await this.cellService.issuseCat(user.address, cat);
+    const data = await this.cellService.issuseCat(cat.ckb_address, cat);
     return {
       success: true,
       code: 200,
